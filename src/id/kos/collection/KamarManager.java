@@ -1,6 +1,6 @@
-package collection;
+package id.kos.collection;
 
-import model.Kamar;
+import id.kos.model.Kamar;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

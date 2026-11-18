@@ -1,46 +1,32 @@
-package view;
+package id.kos.view;
 
-import collection.KamarManager;
-import dao.KamarDAO;
-import model.*;
+import id.kos.collection.KamarManager;
+import id.kos.dao.KamarDAO;
+import id.kos.model.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
-public class KamarFrame extends JFrame {
+/** Layar Data Kamar (sebelumnya KamarFrame), kini berupa panel di dalam MainFrame. */
+public class KamarPanel extends JPanel implements Refreshable {
     private final JTextField txtNomor = new JTextField(12);
     private final JTextField txtHarga = new JTextField(12);
     private final JTextField txtUtility = new JTextField(12);
     private final JTextField txtWifi = new JTextField(12);
     private final JTextField txtCari = new JTextField(14);
-    private final JComboBox<String> cmbTipe =
-            new JComboBox<>(new String[]{"AC", "NON_AC", "ENSUITE"});
-    private final JComboBox<String> cmbStatus =
-            new JComboBox<>(new String[]{"KOSONG", "TERISI"});
-    private final DefaultTableModel model = new DefaultTableModel(
-            new String[]{"ID", "Nomor", "Tipe", "Harga", "Utility", "Wi-Fi", "Status"}, 0) {
-        @Override public boolean isCellEditable(int row, int column) { return false; }
-    };
+    private final JComboBox<String> cmbTipe = new JComboBox<>(new String[]{"AC", "NON_AC", "ENSUITE"});
+    private final JComboBox<String> cmbStatus = new JComboBox<>(new String[]{"KOSONG", "TERISI"});
+    private final DefaultTableModel model = Ui.modelTabel("ID", "Nomor", "Tipe", "Harga", "Utility", "Wi-Fi", "Status");
     private final JTable tabel = new JTable(model);
     private final KamarDAO dao = new KamarDAO();
     private final KamarManager manager = new KamarManager();
     private int selectedId = -1;
 
-    public KamarFrame() {
-        txtUtility.setText("0");
-        txtWifi.setText("0");
-        setTitle("Kos Management System - Manajemen Kamar");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1050, 620);
-        setLocationRelativeTo(null);
+    public KamarPanel() {
         setLayout(new BorderLayout(10, 10));
-
-        JLabel heading = new JLabel("KOS MANAGEMENT SYSTEM  |  DATA KAMAR");
-        heading.setFont(new Font("SansSerif", Font.BOLD, 20));
-        heading.setBorder(BorderFactory.createEmptyBorder(15, 15, 5, 15));
-        add(heading, BorderLayout.NORTH);
+        add(Ui.judul("KOS MANAGEMENT SYSTEM  |  DATA KAMAR"), BorderLayout.NORTH);
 
         JPanel form = new JPanel(new GridLayout(0, 2, 8, 8));
         form.setBorder(BorderFactory.createTitledBorder("Form Kamar"));
@@ -62,6 +48,7 @@ public class KamarFrame extends JFrame {
         left.setPreferredSize(new Dimension(300, 0));
         left.add(form, BorderLayout.NORTH);
         left.add(actions, BorderLayout.CENTER);
+        left.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
         add(left, BorderLayout.WEST);
 
         JPanel search = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -96,8 +83,11 @@ public class KamarFrame extends JFrame {
                 cmbStatus.setSelectedItem(model.getValueAt(row, 6));
             }
         });
+        bersihkan();
         muatData("");
     }
+
+    @Override public void refresh() { muatData(txtCari.getText().trim()); }
 
     private Kamar buatObjek() {
         String nomor = txtNomor.getText().trim();
@@ -114,54 +104,51 @@ public class KamarFrame extends JFrame {
 
     private void simpan() {
         try {
-            Kamar k = buatObjek();
-            dao.insert(k);
-            JOptionPane.showMessageDialog(this, "Data kamar berhasil disimpan.");
+            dao.insert(buatObjek());
+            Ui.info(this, "Data kamar berhasil disimpan.");
             bersihkan(); muatData("");
         } catch (NumberFormatException ex) {
-            pesan("Harga dan biaya harus berupa angka.");
+            Ui.peringatan(this, "Harga dan biaya harus berupa angka.");
         } catch (IllegalArgumentException | SQLException ex) {
-            pesan(ex.getMessage());
+            Ui.peringatan(this, ex.getMessage());
         }
     }
 
     private void update() {
-        if (selectedId < 0) { pesan("Pilih data pada tabel terlebih dahulu."); return; }
+        if (selectedId < 0) { Ui.peringatan(this, "Pilih data pada tabel terlebih dahulu."); return; }
         try {
             dao.update(buatObjek());
-            JOptionPane.showMessageDialog(this, "Data kamar berhasil diperbarui.");
+            Ui.info(this, "Data kamar berhasil diperbarui.");
             bersihkan(); muatData("");
         } catch (NumberFormatException ex) {
-            pesan("Harga dan biaya harus berupa angka.");
+            Ui.peringatan(this, "Harga dan biaya harus berupa angka.");
         } catch (IllegalArgumentException | SQLException ex) {
-            pesan(ex.getMessage());
+            Ui.peringatan(this, ex.getMessage());
         }
     }
 
     private void hapus() {
-        if (selectedId < 0) { pesan("Pilih data pada tabel terlebih dahulu."); return; }
-        int ok = JOptionPane.showConfirmDialog(this, "Hapus kamar terpilih?",
-                "Konfirmasi", JOptionPane.YES_NO_OPTION);
-        if (ok == JOptionPane.YES_OPTION) {
+        if (selectedId < 0) { Ui.peringatan(this, "Pilih data pada tabel terlebih dahulu."); return; }
+        if (Ui.konfirmasi(this, "Hapus kamar terpilih?")) {
             try {
                 dao.delete(selectedId);
                 bersihkan(); muatData("");
-            } catch (SQLException ex) { pesan("Gagal menghapus: " + ex.getMessage()); }
+            } catch (SQLException ex) {
+                Ui.peringatan(this, "Gagal menghapus: " + ex.getMessage());
+            }
         }
     }
 
     private void muatData(String keyword) {
         try {
-            var data = dao.getAll(keyword);
-            manager.setData(data);
+            manager.setData(dao.getAll(keyword));
             model.setRowCount(0);
             for (Kamar k : manager.getDaftarKamar()) {
-                model.addRow(new Object[]{k.getIdKamar(), k.getNomorKamar(),
-                    k.getTipe(), k.getHargaSewa(), k.getBiayaUtility(),
-                    k.getBiayaWifi(), k.getStatus()});
+                model.addRow(new Object[]{k.getIdKamar(), k.getNomorKamar(), k.getTipe(),
+                        k.getHargaSewa(), k.getBiayaUtility(), k.getBiayaWifi(), k.getStatus()});
             }
         } catch (SQLException ex) {
-            pesan("Koneksi/database bermasalah: " + ex.getMessage());
+            Ui.peringatan(this, "Koneksi/database bermasalah: " + ex.getMessage());
         }
     }
 
@@ -170,9 +157,5 @@ public class KamarFrame extends JFrame {
         txtNomor.setText(""); txtHarga.setText("");
         txtUtility.setText("0"); txtWifi.setText("0");
         cmbTipe.setSelectedIndex(0); cmbStatus.setSelectedIndex(0);
-    }
-
-    private void pesan(String msg) {
-        JOptionPane.showMessageDialog(this, msg, "Informasi", JOptionPane.WARNING_MESSAGE);
     }
 }

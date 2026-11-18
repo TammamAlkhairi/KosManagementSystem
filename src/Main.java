@@ -1,8 +1,8 @@
-import view.KamarFrame;
+import id.kos.view.MainFrame;
 import javax.swing.SwingUtilities;
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new KamarFrame().setVisible(true));
+        SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
     }
 }

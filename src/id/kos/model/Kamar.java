@@ -1,4 +1,4 @@
-package model;
+package id.kos.model;
 
 import java.math.BigDecimal;
 
