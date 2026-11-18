@@ -80,13 +80,13 @@ public class KamarDAO {
         String nomor = rs.getString("nomor_kamar");
         String tipe = rs.getString("tipe");
         BigDecimal harga = rs.getBigDecimal("harga_sewa");
-        BigDecimal utility = rs.getBigDecimal("biaya_utility");
-        BigDecimal wifi = rs.getBigDecimal("biaya_wifi");
+        BigDecimal utility = rs.getBigDecimal("biaya_utility")
+                .add(rs.getBigDecimal("biaya_wifi"));
         String status = rs.getString("status");
         switch (tipe) {
-            case "AC":      return new KamarAC(id, nomor, harga, utility, wifi, status);
-            case "ENSUITE": return new KamarEnsuite(id, nomor, harga, utility, wifi, status);
-            default:        return new KamarNonAC(id, nomor, harga, utility, wifi, status);
+            case "AC":      return new KamarAC(id, nomor, harga, utility, status);
+            case "ENSUITE": return new KamarEnsuite(id, nomor, harga, utility, status);
+            default:        return new KamarNonAC(id, nomor, harga, utility, status);
         }
     }
 
@@ -95,7 +95,7 @@ public class KamarDAO {
         ps.setString(2, k.getTipe());
         ps.setBigDecimal(3, k.getHargaSewa());
         ps.setBigDecimal(4, k.getBiayaUtility());
-        ps.setBigDecimal(5, k.getBiayaWifi());
+        ps.setBigDecimal(5, BigDecimal.ZERO);
         ps.setString(6, k.getStatus());
     }
 }

@@ -14,11 +14,10 @@ public class KamarPanel extends JPanel implements Refreshable {
     private final JTextField txtNomor = new JTextField(12);
     private final JTextField txtHarga = new JTextField(12);
     private final JTextField txtUtility = new JTextField(12);
-    private final JTextField txtWifi = new JTextField(12);
     private final JTextField txtCari = new JTextField(14);
     private final JComboBox<String> cmbTipe = new JComboBox<>(new String[]{"AC", "NON_AC", "ENSUITE"});
     private final JComboBox<String> cmbStatus = new JComboBox<>(new String[]{"KOSONG", "TERISI"});
-    private final DefaultTableModel model = Ui.modelTabel("ID", "Nomor", "Tipe", "Harga", "Utility", "Wi-Fi", "Status");
+    private final DefaultTableModel model = Ui.modelTabel("ID", "Nomor", "Tipe", "Harga", "Utility", "Status");
     private final JTable tabel = new JTable(model);
     private final KamarDAO dao = new KamarDAO();
     private final KamarManager manager = new KamarManager();
@@ -34,7 +33,6 @@ public class KamarPanel extends JPanel implements Refreshable {
         form.add(new JLabel("Jenis kamar")); form.add(cmbTipe);
         form.add(new JLabel("Harga sewa")); form.add(txtHarga);
         form.add(new JLabel("Biaya utility")); form.add(txtUtility);
-        form.add(new JLabel("Biaya Wi-Fi")); form.add(txtWifi);
         form.add(new JLabel("Status")); form.add(cmbStatus);
 
         JButton btnSimpan = new JButton("Simpan");
@@ -79,8 +77,7 @@ public class KamarPanel extends JPanel implements Refreshable {
                 cmbTipe.setSelectedItem(model.getValueAt(row, 2));
                 txtHarga.setText(String.valueOf(model.getValueAt(row, 3)));
                 txtUtility.setText(String.valueOf(model.getValueAt(row, 4)));
-                txtWifi.setText(String.valueOf(model.getValueAt(row, 5)));
-                cmbStatus.setSelectedItem(model.getValueAt(row, 6));
+                cmbStatus.setSelectedItem(model.getValueAt(row, 5));
             }
         });
         bersihkan();
@@ -94,12 +91,11 @@ public class KamarPanel extends JPanel implements Refreshable {
         if (nomor.isEmpty()) throw new IllegalArgumentException("Nomor kamar wajib diisi.");
         BigDecimal harga = new BigDecimal(txtHarga.getText().trim());
         BigDecimal utility = new BigDecimal(txtUtility.getText().trim());
-        BigDecimal wifi = new BigDecimal(txtWifi.getText().trim());
         String tipe = (String) cmbTipe.getSelectedItem();
         String status = (String) cmbStatus.getSelectedItem();
-        if ("AC".equals(tipe)) return new KamarAC(selectedId, nomor, harga, utility, wifi, status);
-        if ("ENSUITE".equals(tipe)) return new KamarEnsuite(selectedId, nomor, harga, utility, wifi, status);
-        return new KamarNonAC(selectedId, nomor, harga, utility, wifi, status);
+        if ("AC".equals(tipe)) return new KamarAC(selectedId, nomor, harga, utility, status);
+        if ("ENSUITE".equals(tipe)) return new KamarEnsuite(selectedId, nomor, harga, utility, status);
+        return new KamarNonAC(selectedId, nomor, harga, utility, status);
     }
 
     private void simpan() {
@@ -145,7 +141,7 @@ public class KamarPanel extends JPanel implements Refreshable {
             model.setRowCount(0);
             for (Kamar k : manager.getDaftarKamar()) {
                 model.addRow(new Object[]{k.getIdKamar(), k.getNomorKamar(), k.getTipe(),
-                        k.getHargaSewa(), k.getBiayaUtility(), k.getBiayaWifi(), k.getStatus()});
+                        k.getHargaSewa(), k.getBiayaUtility(), k.getStatus()});
             }
         } catch (SQLException ex) {
             Ui.peringatan(this, "Koneksi/database bermasalah: " + ex.getMessage());
@@ -155,7 +151,7 @@ public class KamarPanel extends JPanel implements Refreshable {
     private void bersihkan() {
         selectedId = -1; tabel.clearSelection();
         txtNomor.setText(""); txtHarga.setText("");
-        txtUtility.setText("0"); txtWifi.setText("0");
+        txtUtility.setText("0");
         cmbTipe.setSelectedIndex(0); cmbStatus.setSelectedIndex(0);
     }
 }

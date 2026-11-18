@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS kamar (
     tipe ENUM('AC','NON_AC','ENSUITE') NOT NULL,
     harga_sewa DECIMAL(12,2) NOT NULL,
     biaya_utility DECIMAL(12,2) NOT NULL DEFAULT 0,
+    -- Kolom legacy; aplikasi menggabungkan nilainya ke biaya_utility saat membaca data lama.
     biaya_wifi DECIMAL(12,2) NOT NULL DEFAULT 0,
     status ENUM('KOSONG','TERISI') NOT NULL DEFAULT 'KOSONG'
 );
@@ -58,9 +59,9 @@ CREATE TABLE IF NOT EXISTS pembayaran (
 
 -- Data kamar
 INSERT IGNORE INTO kamar(nomor_kamar,tipe,harga_sewa,biaya_utility,biaya_wifi,status) VALUES
-('A01','AC',1200000,100000,50000,'KOSONG'),
-('A02','NON_AC',850000,80000,50000,'TERISI'),
-('B01','ENSUITE',1500000,120000,50000,'KOSONG');
+('A01','AC',1200000,150000,0,'KOSONG'),
+('A02','NON_AC',850000,130000,0,'TERISI'),
+('B01','ENSUITE',1500000,170000,0,'KOSONG');
 
 -- Data demo (contoh penghuni, sewa, tagihan, dan pembayaran)
 -- Konsisten dengan status kamar di atas: A02 TERISI (sewa AKTIF), B01 KOSONG (sewa SELESAI).
