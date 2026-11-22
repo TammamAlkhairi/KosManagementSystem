@@ -10,14 +10,16 @@ import id.kos.model.Sewa;
 import id.kos.model.Tagihan;
 import id.kos.util.Format;
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** Layar Tagihan dan Pembayaran: daftar tagihan, pencatatan pembayaran (termasuk cicilan), dan riwayat. */
 public class TagihanPanel extends JPanel implements Refreshable {
@@ -29,9 +31,9 @@ public class TagihanPanel extends JPanel implements Refreshable {
     private final JTable tabelTagihan = new JTable(modelTagihan);
     private final DefaultTableModel modelRiwayat = Ui.modelTabel("Tanggal", "Jumlah", "Metode");
     private final JTable tabelRiwayat = new JTable(modelRiwayat);
-    private final JTextField txtTerpilih = new JTextField(18);
-    private final JTextField txtTanggal = new JTextField(12);
-    private final JTextField txtJumlah = new JTextField(12);
+    private final JTextField txtTerpilih = Ui.kolom(18);
+    private final JTextField txtTanggal = Ui.kolom(12);
+    private final JTextField txtJumlah = Ui.kolom(12);
     private final JComboBox<String> cmbMetode = new JComboBox<>(new String[]{"Tunai", "Transfer", "E-Wallet"});
 
     private final TagihanDAO tagihanDao = new TagihanDAO();
@@ -42,41 +44,53 @@ public class TagihanPanel extends JPanel implements Refreshable {
     private int selectedId = -1;
 
     public TagihanPanel() {
-        setLayout(new BorderLayout(10, 10));
-        add(Ui.judul("Tagihan & Pembayaran"), BorderLayout.NORTH);
+        setLayout(new BorderLayout());
+        setBackground(Ui.LATAR);
+        add(Ui.judul("Tagihan & Pembayaran", "Buat tagihan bulanan/harian, catat pembayaran, dan lihat riwayat cicilan"),
+                BorderLayout.NORTH);
 
-        JPanel atas = new JPanel(new BorderLayout());
-        atas.setBorder(BorderFactory.createTitledBorder("Daftar Tagihan"));
-        atas.add(new JScrollPane(tabelTagihan), BorderLayout.CENTER);
-        tabelTagihan.getColumnModel().getColumn(8).setCellRenderer(new StatusRenderer());
+        JButton btnBuat = Ui.tombol("+ Buat Tagihan", Ui.Gaya.PRIMER);
+        JPanel atas = Ui.kartu("Daftar Tagihan");
+        atas.add(Ui.gulir(tabelTagihan), BorderLayout.CENTER);
+        JPanel barAtas = new JPanel(new BorderLayout());
+        barAtas.setOpaque(false);
+        barAtas.add(new JLabel("Pilih tagihan untuk mencatat pembayaran"), BorderLayout.WEST);
+        barAtas.add(btnBuat, BorderLayout.EAST);
+        atas.add(barAtas, BorderLayout.SOUTH);
+
+        Map<String, Color> warna = new HashMap<>();
+        warna.put(Tagihan.LUNAS, Ui.HIJAU);
+        warna.put(Tagihan.MENUNGGAK, Ui.MERAH);
+        warna.put(Tagihan.BELUM_LUNAS, Ui.ORANYE);
+        tabelTagihan.getColumnModel().getColumn(8).setCellRenderer(Ui.rendererStatus(warna));
+        Ui.kolomRupiah(tabelRiwayat, 1);
+        Ui.lebarKolom(tabelTagihan, 30, 60, 100, 210, 100, 95, 95, 95, 105);
+        for (int c : new int[]{5, 6, 7}) tabelTagihan.getColumnModel().getColumn(c).setCellRenderer(Ui.rendererAngka(o -> String.valueOf(o)));
 
         txtTerpilih.setEditable(false);
-        JPanel form = new JPanel(new GridBagLayout());
-        form.setBorder(BorderFactory.createTitledBorder("Catat Pembayaran"));
-        GridBagConstraints g = new GridBagConstraints();
-        g.insets = new Insets(4, 4, 4, 4); g.anchor = GridBagConstraints.WEST; g.fill = GridBagConstraints.HORIZONTAL;
-        baris(form, g, 0, "Tagihan terpilih", txtTerpilih);
-        baris(form, g, 1, "Tanggal bayar", txtTanggal);
-        baris(form, g, 2, "Jumlah bayar", txtJumlah);
-        baris(form, g, 3, "Metode", cmbMetode);
-        JButton btnSimpan = new JButton("Simpan Pembayaran");
-        JButton btnBuat = new JButton("Buat Tagihan");
-        JPanel tombol = new JPanel(new GridLayout(1, 2, 5, 5));
-        tombol.add(btnSimpan); tombol.add(btnBuat);
-        g.gridy = 4; g.gridx = 0; g.gridwidth = 2; form.add(tombol, g);
+        JPanel formIsi = Ui.formPanel();
+        Ui.baris(formIsi, 0, "Tagihan terpilih", txtTerpilih);
+        Ui.baris(formIsi, 1, "Tanggal bayar", txtTanggal);
+        Ui.baris(formIsi, 2, "Jumlah bayar", txtJumlah);
+        Ui.baris(formIsi, 3, "Metode", cmbMetode);
+        JButton btnSimpan = Ui.tombol("Simpan Pembayaran", Ui.Gaya.SUKSES);
+        JPanel form = Ui.kartu("Catat Pembayaran");
+        form.add(formIsi, BorderLayout.CENTER);
+        form.add(btnSimpan, BorderLayout.SOUTH);
 
-        JPanel riwayat = new JPanel(new BorderLayout());
-        riwayat.setBorder(BorderFactory.createTitledBorder("Riwayat Pembayaran (tagihan terpilih)"));
-        riwayat.add(new JScrollPane(tabelRiwayat), BorderLayout.CENTER);
+        JPanel riwayat = Ui.kartu("Riwayat Pembayaran (tagihan terpilih)");
+        riwayat.add(Ui.gulir(tabelRiwayat), BorderLayout.CENTER);
 
-        JPanel bawah = new JPanel(new GridLayout(1, 2, 10, 0));
+        JPanel bawah = new JPanel(new GridLayout(1, 2, 12, 0));
+        bawah.setOpaque(false);
         bawah.add(form); bawah.add(riwayat);
-        bawah.setPreferredSize(new Dimension(0, 240));
+        bawah.setPreferredSize(new Dimension(0, 235));
 
-        JPanel isi = new JPanel(new BorderLayout(10, 10));
+        JPanel isi = new JPanel(new BorderLayout(0, 12));
+        isi.setOpaque(false);
         isi.add(atas, BorderLayout.CENTER);
         isi.add(bawah, BorderLayout.SOUTH);
-        isi.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        isi.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
         add(isi, BorderLayout.CENTER);
 
         tabelTagihan.getSelectionModel().addListSelectionListener(e -> {
@@ -86,11 +100,6 @@ public class TagihanPanel extends JPanel implements Refreshable {
         btnBuat.addActionListener(e -> buatTagihan());
         txtTanggal.setText(LocalDate.now().toString());
         refresh();
-    }
-
-    private void baris(JPanel p, GridBagConstraints g, int row, String label, Component c) {
-        g.gridwidth = 1; g.gridy = row; g.gridx = 0; g.weightx = 0; p.add(new JLabel(label), g);
-        g.gridx = 1; g.weightx = 1; p.add(c, g);
     }
 
     @Override public void refresh() {
@@ -108,9 +117,10 @@ public class TagihanPanel extends JPanel implements Refreshable {
             Tagihan t = daftar.get(i);
             if (t.getIdTagihan() == pilih) barisPilih = i;
             modelTagihan.addRow(new Object[]{t.getIdTagihan(), t.getNomorKamar(), t.getNamaPenghuni(),
-                    t.getPeriodeMulai() + " s/d " + t.getPeriodeAkhir(), t.getJatuhTempo(),
-                    Format.angka(t.getTotalTagihan()), Format.angka(t.getTotalBayar()),
-                    Format.angka(t.hitungSisa()), t.getStatus(hariIni)});
+                    Format.tanggal(t.getPeriodeMulai()) + " s/d " + Format.tanggal(t.getPeriodeAkhir()),
+                    Format.tanggal(t.getJatuhTempo()),
+                    Format.rupiah(t.getTotalTagihan()), Format.rupiah(t.getTotalBayar()),
+                    Format.rupiah(t.hitungSisa()), t.getStatus(hariIni)});
         }
         if (barisPilih >= 0) tabelTagihan.setRowSelectionInterval(barisPilih, barisPilih);
         else { selectedId = -1; pilihTagihan(); }
@@ -130,7 +140,7 @@ public class TagihanPanel extends JPanel implements Refreshable {
         txtJumlah.setText(t.hitungSisa().stripTrailingZeros().toPlainString());
         try {
             for (Pembayaran p : pembayaranDao.getByTagihan(t.getIdTagihan())) {
-                modelRiwayat.addRow(new Object[]{p.getTanggalBayar(), Format.angka(p.getJumlahBayar()), p.getMetodePembayaran()});
+                modelRiwayat.addRow(new Object[]{Format.tanggal(p.getTanggalBayar()), Format.rupiah(p.getJumlahBayar()), p.getMetodePembayaran()});
             }
         } catch (SQLException ex) {
             Ui.peringatan(this, "Gagal memuat riwayat: " + ex.getMessage());
@@ -151,20 +161,23 @@ public class TagihanPanel extends JPanel implements Refreshable {
         }
     }
 
-    /** Membuat tagihan bulan berjalan untuk sewa AKTIF; totalnya dihitung dari Kamar.hitungTotalBulanan(). */
+    /**
+     * Membuat tagihan untuk sewa AKTIF yang dipilih.
+     * BULANAN: tagihan bulan berjalan = Kamar.hitungTotalBulanan().
+     * HARIAN : jumlah hari x Kamar.hitungTarifHarian(), jatuh tempo pada hari mulai sewa (bayar di muka).
+     */
     private void buatTagihan() {
         try {
             List<Sewa> aktif = sewaDao.getAktif();
             if (aktif.isEmpty()) { Ui.peringatan(this, "Tidak ada sewa AKTIF."); return; }
-            Sewa pilihan = (Sewa) JOptionPane.showInputDialog(this, "Pilih sewa untuk dibuatkan tagihan bulan ini:",
+            Sewa pilihan = (Sewa) JOptionPane.showInputDialog(this, "Pilih sewa untuk dibuatkan tagihan:",
                     "Buat Tagihan", JOptionPane.PLAIN_MESSAGE, null, aktif.toArray(), aktif.get(0));
             if (pilihan == null) return;
+            Kamar kamar = kamarDao.getById(pilihan.getIdKamar());
             if (Sewa.HARIAN.equals(pilihan.getJenisPeriode())) {
-                // TODO: tagihan untuk sewa HARIAN (tarif per hari) belum didukung
-                Ui.peringatan(this, "Tagihan untuk sewa HARIAN belum didukung.");
+                buatTagihanHarian(pilihan, kamar);
                 return;
             }
-            Kamar kamar = kamarDao.getById(pilihan.getIdKamar());
             LocalDate awal = LocalDate.now().withDayOfMonth(1);
             LocalDate akhir = awal.withDayOfMonth(awal.lengthOfMonth());
             LocalDate tempo = awal.withDayOfMonth(TANGGAL_JATUH_TEMPO);
@@ -178,16 +191,28 @@ public class TagihanPanel extends JPanel implements Refreshable {
         }
     }
 
-    /** Memberi warna pada kolom status. */
-    private static class StatusRenderer extends DefaultTableCellRenderer {
-        @Override public Component getTableCellRendererComponent(JTable t, Object v, boolean sel, boolean foc, int r, int c) {
-            Component comp = super.getTableCellRendererComponent(t, v, sel, foc, r, c);
-            if (!sel) {
-                String s = String.valueOf(v);
-                comp.setForeground(Tagihan.LUNAS.equals(s) ? new Color(0x2E8B57)
-                        : Tagihan.MENUNGGAK.equals(s) ? new Color(0xC0392B) : Color.BLACK);
+    private void buatTagihanHarian(Sewa sewa, Kamar kamar) throws SQLException {
+        LocalDate awal = sewa.getTanggalMulai();
+        LocalDate akhir = sewa.getTanggalSelesai();
+        if (akhir == null) {
+            String masuk = JOptionPane.showInputDialog(this,
+                    "Sewa harian ini belum punya tanggal selesai.\nBerapa hari menginap?", "1");
+            if (masuk == null) return;
+            try {
+                int hari = Integer.parseInt(masuk.trim());
+                if (hari < 1) throw new NumberFormatException();
+                akhir = awal.plusDays(hari - 1L);
+            } catch (NumberFormatException ex) {
+                Ui.peringatan(this, "Jumlah hari harus berupa bilangan bulat minimal 1.");
+                return;
             }
-            return comp;
         }
+        long hari = ChronoUnit.DAYS.between(awal, akhir) + 1;
+        BigDecimal tarif = kamar.hitungTarifHarian();
+        BigDecimal total = tarif.multiply(BigDecimal.valueOf(hari));
+        tagihanDao.insert(new Tagihan(-1, sewa.getIdSewa(), awal, akhir, awal, total, BigDecimal.ZERO));
+        Ui.info(this, "Tagihan harian kamar " + sewa.getNomorKamar() + " berhasil dibuat:\n"
+                + hari + " hari x " + Format.rupiah(tarif) + " = " + Format.rupiah(total));
+        refresh();
     }
 }

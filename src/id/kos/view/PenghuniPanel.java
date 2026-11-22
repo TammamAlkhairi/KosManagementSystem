@@ -9,55 +9,65 @@ import java.sql.SQLException;
 
 /** Layar Data Penghuni: CRUD dengan pola yang sama seperti Data Kamar. */
 public class PenghuniPanel extends JPanel implements Refreshable {
-    private final JTextField txtNama = new JTextField(14);
-    private final JTextField txtIdentitas = new JTextField(14);
-    private final JTextField txtHp = new JTextField(14);
+    private final JTextField txtNama = Ui.kolom(14);
+    private final JTextField txtIdentitas = Ui.kolom(14);
+    private final JTextField txtHp = Ui.kolom(14);
     private final JTextArea txtAlamat = new JTextArea(4, 14);
-    private final JTextField txtCari = new JTextField(14);
+    private final JTextField txtCari = Ui.kolom(14);
     private final DefaultTableModel model = Ui.modelTabel("ID", "Nama", "No. Identitas", "No. HP", "Alamat");
     private final JTable tabel = new JTable(model);
     private final PenghuniDAO dao = new PenghuniDAO();
     private int selectedId = -1;
 
     public PenghuniPanel() {
-        setLayout(new BorderLayout(10, 10));
-        add(Ui.judul("Data Penghuni"), BorderLayout.NORTH);
+        setLayout(new BorderLayout());
+        setBackground(Ui.LATAR);
+        add(Ui.judul("Data Penghuni", "Kelola data identitas dan kontak penghuni kos"), BorderLayout.NORTH);
 
-        JPanel form = new JPanel(new GridBagLayout());
-        form.setBorder(BorderFactory.createTitledBorder("Form Penghuni"));
-        GridBagConstraints g = new GridBagConstraints();
-        g.insets = new Insets(4, 4, 4, 4); g.anchor = GridBagConstraints.WEST; g.fill = GridBagConstraints.HORIZONTAL;
-        tambahBaris(form, g, 0, "Nama lengkap", txtNama);
-        tambahBaris(form, g, 1, "No. identitas", txtIdentitas);
-        tambahBaris(form, g, 2, "No. HP", txtHp);
+        JPanel formIsi = Ui.formPanel();
+        Ui.baris(formIsi, 0, "Nama lengkap", txtNama);
+        Ui.baris(formIsi, 1, "No. identitas", txtIdentitas);
+        Ui.baris(formIsi, 2, "No. HP", txtHp);
         txtAlamat.setLineWrap(true); txtAlamat.setWrapStyleWord(true);
-        tambahBaris(form, g, 3, "Alamat", new JScrollPane(txtAlamat));
+        JScrollPane gulirAlamat = new JScrollPane(txtAlamat);
+        gulirAlamat.setBorder(Ui.bingkaiBulat());
+        Ui.baris(formIsi, 3, "Alamat", gulirAlamat);
+        JPanel form = Ui.kartu("Form Penghuni");
+        form.add(formIsi, BorderLayout.CENTER);
 
-        JButton btnSimpan = new JButton("Simpan");
-        JButton btnUpdate = new JButton("Update");
-        JButton btnHapus = new JButton("Hapus");
-        JButton btnBersih = new JButton("Bersihkan");
-        JPanel actions = new JPanel(new GridLayout(2, 2, 5, 5));
+        JButton btnSimpan = Ui.tombol("Simpan", Ui.Gaya.PRIMER);
+        JButton btnUpdate = Ui.tombol("Update", Ui.Gaya.SUKSES);
+        JButton btnHapus = Ui.tombol("Hapus", Ui.Gaya.BAHAYA);
+        JButton btnBersih = Ui.tombol("Bersihkan");
+        JPanel actions = new JPanel(new GridLayout(2, 2, 8, 8));
+        actions.setOpaque(false);
         actions.add(btnSimpan); actions.add(btnUpdate); actions.add(btnHapus); actions.add(btnBersih);
+        form.add(actions, BorderLayout.SOUTH);
 
-        JPanel left = new JPanel(new BorderLayout(5, 10));
-        left.setPreferredSize(new Dimension(330, 0));
+        JPanel left = new JPanel(new BorderLayout());
+        left.setOpaque(false);
+        left.setPreferredSize(new Dimension(360, 0));
         left.add(form, BorderLayout.NORTH);
-        left.add(actions, BorderLayout.CENTER);
-        left.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
+        left.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 0));
         add(left, BorderLayout.WEST);
 
-        JPanel search = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton btnCari = Ui.tombol("Cari", Ui.Gaya.PRIMER);
+        JButton btnSemua = Ui.tombol("Tampilkan Semua");
+        JPanel search = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        search.setOpaque(false);
         search.add(new JLabel("Cari nama:"));
         search.add(txtCari);
-        JButton btnCari = new JButton("Cari");
-        JButton btnSemua = new JButton("Tampilkan Semua");
         search.add(btnCari); search.add(btnSemua);
-        JPanel center = new JPanel(new BorderLayout(5, 5));
+        JPanel center = Ui.kartu(null);
         center.add(search, BorderLayout.NORTH);
-        center.add(new JScrollPane(tabel), BorderLayout.CENTER);
-        center.setBorder(BorderFactory.createEmptyBorder(0, 5, 10, 10));
-        add(center, BorderLayout.CENTER);
+        center.add(Ui.gulir(tabel), BorderLayout.CENTER);
+        JPanel wrap = new JPanel(new BorderLayout());
+        wrap.setOpaque(false);
+        wrap.setBorder(BorderFactory.createEmptyBorder(0, 14, 20, 20));
+        wrap.add(center, BorderLayout.CENTER);
+        add(wrap, BorderLayout.CENTER);
+        Ui.lebarKolom(tabel, 40, 140, 185, 140, 170);
+        txtCari.addActionListener(e -> muatData(txtCari.getText().trim()));
 
         btnSimpan.addActionListener(e -> simpan());
         btnUpdate.addActionListener(e -> update());
@@ -76,11 +86,6 @@ public class PenghuniPanel extends JPanel implements Refreshable {
             }
         });
         muatData("");
-    }
-
-    private void tambahBaris(JPanel p, GridBagConstraints g, int row, String label, Component c) {
-        g.gridy = row; g.gridx = 0; g.weightx = 0; p.add(new JLabel(label), g);
-        g.gridx = 1; g.weightx = 1; p.add(c, g);
     }
 
     @Override public void refresh() { muatData(txtCari.getText().trim()); }

@@ -1,39 +1,49 @@
 package id.kos.util;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
+/**
+ * Format angka, rupiah, dan tanggal. Pemisah ribuan (titik) dan desimal (koma) ditentukan di sini,
+ * tidak mengambil dari locale JDK, supaya hasilnya sama di semua komputer dan versi Java.
+ */
 public class Format {
-    private static final Locale LOKAL_ID = Locale.of("id", "ID");
-    private static final NumberFormat FORMAT_RUPIAH = NumberFormat.getCurrencyInstance(LOKAL_ID);
-    private static final NumberFormat FORMAT_ANGKA = NumberFormat.getNumberInstance(LOKAL_ID);
     private static final DateTimeFormatter FORMAT_TANGGAL = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
+    private static DecimalFormat pola(String pola) {
+        DecimalFormatSymbols simbol = new DecimalFormatSymbols(Locale.ROOT);
+        simbol.setGroupingSeparator('.');
+        simbol.setDecimalSeparator(',');
+        DecimalFormat f = new DecimalFormat(pola, simbol);
+        f.setRoundingMode(RoundingMode.HALF_UP);
+        return f;
+    }
+
     public static String rupiah(BigDecimal nilai) {
-        if (nilai == null) {
-            return "Rp0";
-        }
-        return FORMAT_RUPIAH.format(nilai);
+        if (nilai == null) return "Rp0";
+        String angka = pola("#,##0").format(nilai.abs());
+        return (nilai.signum() < 0 ? "-Rp" : "Rp") + angka;
     }
 
     public static String rupiah(double nilai) {
-        return FORMAT_RUPIAH.format(nilai);
+        return rupiah(BigDecimal.valueOf(nilai));
     }
 
     public static String angka(BigDecimal nilai) {
-        if (nilai == null) {
-            return "0";
-        }
-        return FORMAT_ANGKA.format(nilai);
+        return nilai == null ? "0" : pola("#,##0.##").format(nilai);
     }
 
     public static String angka(double nilai) {
-        return FORMAT_ANGKA.format(nilai);
-    }public static BigDecimal desimal(String teks, String namaKolom) {
+        return pola("#,##0.##").format(nilai);
+    }
+
+    public static BigDecimal desimal(String teks, String namaKolom) {
         if (teks == null || teks.trim().isEmpty()) {
             throw new IllegalArgumentException(namaKolom + " wajib diisi.");
         }

@@ -45,5 +45,5 @@ public class Sewa {
     public String getNamaPenghuni() { return namaPenghuni; }
     public void setNamaPenghuni(String namaPenghuni) { this.namaPenghuni = namaPenghuni; }
 
-    @Override public String toString() { return nomorKamar + " - " + namaPenghuni; }
+    @Override public String toString() { return nomorKamar + " - " + namaPenghuni + " (" + jenisPeriode + ")"; }
 }

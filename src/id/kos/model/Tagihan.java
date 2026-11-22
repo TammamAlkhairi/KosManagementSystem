@@ -2,6 +2,7 @@ package id.kos.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Tagihan {
     public static final String LUNAS = "LUNAS";
@@ -18,6 +19,7 @@ public class Tagihan {
     // data tampilan hasil JOIN
     private String nomorKamar;
     private String namaPenghuni;
+    private String noHp;
 
     public Tagihan(int idTagihan, int idSewa, LocalDate periodeMulai, LocalDate periodeAkhir,
         LocalDate jatuhTempo, BigDecimal totalTagihan, BigDecimal totalBayar) {
@@ -33,6 +35,11 @@ public class Tagihan {
     public BigDecimal hitungSisa() { return totalTagihan.subtract(totalBayar); }
     public boolean isLunas() { return hitungSisa().signum() <= 0; }
     public boolean isMenunggak(LocalDate hariIni) { return !isLunas() && hariIni.isAfter(jatuhTempo); }
+
+    /** Jumlah hari keterlambatan terhitung dari jatuh tempo; 0 bila belum lewat atau sudah lunas. */
+    public long hariTerlambat(LocalDate hariIni) {
+        return isMenunggak(hariIni) ? ChronoUnit.DAYS.between(jatuhTempo, hariIni) : 0;
+    }
 
     public String getStatus(LocalDate hariIni) {
         if (isLunas()) return LUNAS;
@@ -50,4 +57,6 @@ public class Tagihan {
     public void setNomorKamar(String nomorKamar) { this.nomorKamar = nomorKamar; }
     public String getNamaPenghuni() { return namaPenghuni; }
     public void setNamaPenghuni(String namaPenghuni) { this.namaPenghuni = namaPenghuni; }
+    public String getNoHp() { return noHp; }
+    public void setNoHp(String noHp) { this.noHp = noHp; }
 }
