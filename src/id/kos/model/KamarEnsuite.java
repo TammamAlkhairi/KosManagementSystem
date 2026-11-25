@@ -3,8 +3,8 @@ import java.math.BigDecimal;
 
 public class KamarEnsuite extends Kamar {
     public KamarEnsuite(int id, String nomor, BigDecimal harga, BigDecimal utility,String status) {
-        // INHERITANCE
-        super(id, nomor, harga, utility, status);
+    // INHERITANCE
+    super(id, nomor, harga, utility, status);
     }
 
     // OVERRIDE DAN POLYMORPHISM

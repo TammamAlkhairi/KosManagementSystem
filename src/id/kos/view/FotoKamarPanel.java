@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 import javax.swing.*;
 
-// menampilkan foto kamar, AC , Non-AC, ENSUITE, otomatis disesuaikan .
+// menampilkan foto kamar, AC , Non-AC, ENSUITE
 class FotoKamarPanel extends JPanel {
     private static final int TINGGI_KETERANGAN = 46;
 
@@ -41,7 +41,6 @@ class FotoKamarPanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // mengatur kualitas tampilan huruf.
-        // ditambah fractional metrics supaya jarak antarhuruf tidak dibulatkan ke piksel penuh dan terlihat renggang.
         Map<?, ?> hintDesktop = (Map<?, ?>) Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
         if (hintDesktop != null) g2.addRenderingHints(hintDesktop);
         else g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);

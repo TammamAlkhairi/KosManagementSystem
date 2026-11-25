@@ -16,7 +16,6 @@ public class Tagihan {
     private LocalDate jatuhTempo;
     private BigDecimal totalTagihan;
     private BigDecimal totalBayar;
-    // data tampilan hasil JOIN
     private String nomorKamar;
     private String namaPenghuni;
     private String noHp;

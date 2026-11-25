@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-// dasboard , menampilkan jumlah hunian, kamar kosong, tunggakan, sisa tagihan
+// dasboard
 public class DashboardPanel extends JPanel implements Refreshable {
     private static final int HARI_PENGINGAT = 7;
 
@@ -199,8 +199,8 @@ public class DashboardPanel extends JPanel implements Refreshable {
                 if (t.isMenunggak(hariIni)) menunggak++;
                 if (!t.isLunas()) belumTerbayar = belumTerbayar.add(t.hitungSisa());
             }
-            int persen = kamar.isEmpty() ? 0 : Math.round(terisi * 100f / kamar.size());
-            nilai[0].setText(persen + "%  (" + terisi + " dari " + kamar.size() + ")");
+            
+            nilai[0].setText(terisi + " dari " + kamar.size() );
             nilai[0].setFont(Ui.font(Font.BOLD, 20f));
             nilai[1].setText(String.valueOf(kamar.size() - terisi));
             nilai[2].setText(String.valueOf(menunggak));

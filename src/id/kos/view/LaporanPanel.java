@@ -22,10 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
-  Laporan Tunggakan: filter tanggal acuan + kamar, tabel tunggakan, total tunggakan,
-  serta tombol Cetak, bisa Simpan sebagai PDF, lewat dialog cetak dan Ekspor CSV dibuka di Excel.
- */
 public class LaporanPanel extends JPanel implements Refreshable {
     private static final String SEMUA_KAMAR = "Semua kamar";
 

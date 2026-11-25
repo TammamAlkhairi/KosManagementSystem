@@ -135,7 +135,7 @@ public class SewaPanel extends JPanel implements Refreshable {
         muatTabel();
     }
 
-    // Memperbarui foto + estimasi biaya per bulan atau per hari sesuai jenis periode.
+    // Memperbarui foto + estimasi biaya per bulan atau perhari sesuai jenis periode.
     private void perbaruiEstimasi() {
         if (memuat) return;
         Kamar k = (Kamar) cmbKamar.getSelectedItem();

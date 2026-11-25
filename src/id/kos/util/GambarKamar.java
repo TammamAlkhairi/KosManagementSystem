@@ -11,13 +11,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
-
-/* 
-  Memuat foto tipe kamar. Folder images dicari berurutan
-   1. classpath kalau foto ikut dikemas ke JAR
-   2. folder kerja saat aplikasi dijalankan
-   3. folder tempat class/JAR berada
-  foto tetap ketemu walau IDE menjalankan aplikasi dari folder lain. */
  
 public final class GambarKamar {
     private static final String FOLDER = "images";
@@ -51,7 +44,7 @@ public final class GambarKamar {
         }
     }
 
-    // Diperkecil bertahap supaya gambar bagus.
+    // Memperkecil foto bertahap
     private static BufferedImage perkecil(BufferedImage src, int w, int h) {
         BufferedImage cur = src;
         int cw = src.getWidth(), ch = src.getHeight();

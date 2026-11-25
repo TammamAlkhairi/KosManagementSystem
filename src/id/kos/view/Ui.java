@@ -28,7 +28,7 @@ final class Ui {
     static final Color MERAH     = new Color(0xA4473A);
     static final Color ZEBRA     = new Color(0xFBF9F7);
     static final Color PILIH     = new Color(0xE6D9CC);
-    static final Color LATAR_KOLOM = new Color(0xEFEAE5);   // judul kolom tabel, kolom terkunci
+    static final Color LATAR_KOLOM = new Color(0xEFEAE5); 
     static final Color LATAR_FOTO  = new Color(0xE9E4DF);  
     static final String FONT = pilihFont();
 
@@ -216,7 +216,7 @@ final class Ui {
         };
     }
 
-    // Renderer dasar: baris berwaarna + teks berwarna.
+    // Renderer: baris berwaarna + teks berwarna.
     static class SelRenderer extends DefaultTableCellRenderer {
         private final Map<String, Color> warnaTeks;
         private final int rata;

@@ -12,14 +12,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-// mengubah font nya menjadi manrope
+// mengubah font
 public final class FontAplikasi {
     public static final String NAMA = "Manrope";
     private static final String[] BERKAS = {"Manrope-Regular.ttf", "Manrope-Bold.ttf"};
 
     private FontAplikasi() { }
 
-    /** Mengembalikan nama family Manrope bila tersedia, selain itu null. */
     public static String siapkan() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Set<String> terpasang = new HashSet<>(Arrays.asList(ge.getAvailableFontFamilyNames()));

@@ -15,7 +15,6 @@ public class Sewa {
     private LocalDate tanggalSelesai;   // null selama sewa masih berjalan
     private String jenisPeriode;
     private String statusSewa;
-    // data tampilan hasil JOIN
     private String nomorKamar;
     private String namaPenghuni;
 

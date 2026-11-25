@@ -136,7 +136,7 @@ public class KamarPanel extends JPanel implements Refreshable {
 
     @Override public void refresh() { muatData(txtCari.getText().trim()); }
 
-    // Menampilkan total bulanan hanya kalau form berisi angka yang valid.
+    // Menampilkan total bulanan hanya kalau form berisi angka valid.
     private void tampilTotal() {
         try {
             Kamar k = kamarContoh((String) cmbTipe.getSelectedItem());

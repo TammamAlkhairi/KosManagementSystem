@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// Tagihan dan Pembayaran: daftar tagihan, pencatatan pembayaran (termasuk cicilan), dan riwayat.
+// Tagihan dan Pembayaran: daftar tagihan, pencatatan pembayaran, dan riwayat.
 public class TagihanPanel extends JPanel implements Refreshable {
     // Tanggal jatuh tempo default setiap bulan. 
     private static final int TANGGAL_JATUH_TEMPO = 5;

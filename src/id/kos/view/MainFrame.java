@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-// Jendela utama, menu samping dan area konten.
+// Jendela utama
 public class MainFrame extends JFrame {
     public static final String DASHBOARD = "dashboard";
     public static final String KAMAR = "kamar";
@@ -21,7 +21,7 @@ public class MainFrame extends JFrame {
     private final Map<String, Refreshable> layar = new LinkedHashMap<>();
     private final Map<String, MenuButton> menu = new LinkedHashMap<>();
 
-    // Memasang tema tampilan. Panggil sebelum membuat jendela apa pun, agar ditearpkan semua
+    // Memasang tema tampilan
     public static void pasangTema() { Ui.pasangTema(); }
 
     public MainFrame() {

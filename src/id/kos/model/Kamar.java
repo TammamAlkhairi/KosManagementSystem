@@ -10,7 +10,7 @@ public abstract class Kamar {
     public static final int HARI_PER_BULAN = 30;
 
     // ENCAPSULATION
-    // Atribut dibuat private agar data hanya diubah melalui constructor, getter, dan setter.
+    // Atribut dibuat private biar data hanya diubah melalui constructor, getter, dan setter.
     private int idKamar;
     private String nomorKamar;
     private BigDecimal hargaSewa;
@@ -28,20 +28,10 @@ public abstract class Kamar {
     // POLYMORPHISM
     // abstrak
     public abstract BigDecimal hitungBiayaKhusus();
-
-    // Nama foto tipe kamar.
     public abstract String getNamaGambar();
-
-    // Nama tipe kamar.
     public abstract String getNamaTipe();
-
-    // Fasilitas khas tipe kamar.
-    public abstract String[] getFasilitas();
-
-    // Harga sewa standar tipe kamar, terisi otomatis di form Data Kamar. 
+    public abstract String[] getFasilitas(); 
     public abstract BigDecimal getHargaStandar();
-
-    // Biaya utility standar tipe kamar, listrik, air, wifi, terisi otomatis di form Data Kamar.
     public abstract BigDecimal getUtilityStandar();
 
     public BigDecimal hitungTotalBulanan() {
