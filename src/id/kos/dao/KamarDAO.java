@@ -21,7 +21,7 @@ public class KamarDAO {
         return hasil;
     }
 
-    // Dipakai layar Transaksi Sewa: hanya kamar dengan status tertentu (mis. KOSONG). 
+    // Transaksi Sewa, untuk memastikan kamar yang dipilih masih tersedia.
     public List<Kamar> getByStatus(String status) throws SQLException {
         List<Kamar> hasil = new ArrayList<>();
         String sql = "SELECT * FROM kamar WHERE status = ? ORDER BY nomor_kamar";
