@@ -7,7 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.SQLException;
 
-/** Layar Data Penghuni: CRUD dengan pola yang sama seperti Data Kamar. */
+// Data Penghuni: CRUD, sama seperti Data Kamar.
 public class PenghuniPanel extends JPanel implements Refreshable {
     private final JTextField txtNama = Ui.kolom(14);
     private final JTextField txtIdentitas = Ui.kolom(14);

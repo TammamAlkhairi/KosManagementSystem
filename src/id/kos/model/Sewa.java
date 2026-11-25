@@ -12,7 +12,7 @@ public class Sewa {
     private int idKamar;
     private int idPenghuni;
     private LocalDate tanggalMulai;
-    private LocalDate tanggalSelesai;   // null selama sewa berjalan
+    private LocalDate tanggalSelesai;   // null selama sewa masih berjalan
     private String jenisPeriode;
     private String statusSewa;
     // data tampilan hasil JOIN

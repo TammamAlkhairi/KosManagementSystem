@@ -2,10 +2,12 @@ package id.kos.model;
 import java.math.BigDecimal;
 
 public class KamarNonAC extends Kamar {
-    public KamarNonAC(int id, String nomor, BigDecimal harga, BigDecimal utility,
-                      String status) {
+    public KamarNonAC(int id, String nomor, BigDecimal harga, BigDecimal utility,String status) {
+        // INHERITANCE 
         super(id, nomor, harga, utility, status);
     }
+
+    // OVERRIDE DAN POLYMORPHISM
     @Override public BigDecimal hitungBiayaKhusus() {
         return BigDecimal.ZERO;
     }

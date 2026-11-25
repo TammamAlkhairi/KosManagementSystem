@@ -25,7 +25,7 @@ public class PembayaranDAO {
         return hasil;
     }
 
-    // Menyimpan pembayaran dan menambah tagihan.total_bayar dalam satu transaksi.
+    // Menyimpan pembayaran dan menambah tagihan,total_bayar dalam satu transaksi.
     public void simpan(Pembayaran p) throws SQLException {
         try (Connection c = KoneksiDatabase.getConnection()) {
             c.setAutoCommit(false);

@@ -24,7 +24,7 @@ public class TagihanDAO {
         return hasil;
     }
 
-    // Menambah tagihan baru; menolak bila periode yang sama untuk sewa tersebut sudah ada.
+    // Menambah tagihan baru, menolak bila periode yang sama untuk sewa tersebut sudah ada.
     public void insert(Tagihan t) throws SQLException {
         try (Connection c = KoneksiDatabase.getConnection()) {
             try (PreparedStatement cek = c.prepareStatement(
@@ -49,23 +49,19 @@ public class TagihanDAO {
         }
     }
 
-    /**
-     * Laporan Tunggakan: tagihan yang belum lunas dan jatuh temponya sudah lewat dari tanggalAcuan
-     * (selaras dengan Tagihan.isMenunggak). idKamar &lt;= 0 berarti semua kamar.
-     * Diurutkan dari yang paling lama menunggak.
-     */
+    
+     // Laporan Tunggakan,tagihan yang belum lunas dan jatuh temponya sudah lewat dari tanggal
     public List<Tagihan> getMenunggak(LocalDate tanggalAcuan, int idKamar) throws SQLException {
         return ambilBelumLunas("t.jatuh_tempo < ?", tanggalAcuan, idKamar);
     }
 
+    // OVERLOADING:
+    // Nama method sama, tetapi parameter berbeda. Method ini memanggil versi dengan idKamar = -1.
     public List<Tagihan> getMenunggak(LocalDate tanggalAcuan) throws SQLException {
         return getMenunggak(tanggalAcuan, -1);
     }
 
-    /**
-     * Pengingat Dashboard: tagihan belum lunas yang sudah lewat jatuh tempo ATAU jatuh tempo
-     * dalam {@code hariKeDepan} hari ke depan.
-     */
+    // Laporan Pengingat, tagihan yang belum lunas dan jatuh temponya dalam beberapa hari ke depan.
     public List<Tagihan> getPengingat(LocalDate hariIni, int hariKeDepan) throws SQLException {
         return ambilBelumLunas("t.jatuh_tempo <= ?", hariIni.plusDays(hariKeDepan), -1);
     }

@@ -12,11 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Menyiapkan font Manrope. Urutan: Manrope yang sudah terpasang di sistem, lalu berkas
- * Manrope-Regular.ttf dan Manrope-Bold.ttf di folder fonts/ (dicari dengan cara yang sama seperti folder images/).
- * Bila keduanya tidak ada, pemanggil memakai font cadangan.
- */
+// mengubah font nya menjadi manrope
 public final class FontAplikasi {
     public static final String NAMA = "Manrope";
     private static final String[] BERKAS = {"Manrope-Regular.ttf", "Manrope-Bold.ttf"};

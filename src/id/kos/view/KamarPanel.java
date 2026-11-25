@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Layar Data Kamar: CRUD kamar + pratinjau foto sesuai tipe kamar (AC / Non-AC / Ensuite). */
+// Layar Data Kamar: CRUD kamar + foto sesuai tipe kamar (AC , Non-AC , Ensuite).
 public class KamarPanel extends JPanel implements Refreshable {
     private final JTextField txtNomor = Ui.kolom(12);
     private final JTextField txtHarga = Ui.kolom(12);
@@ -27,7 +27,7 @@ public class KamarPanel extends JPanel implements Refreshable {
     private final KamarDAO dao = new KamarDAO();
     private final KamarManager manager = new KamarManager();
     private int selectedId = -1;
-    private boolean memuatBaris;   // true saat form diisi dari baris tabel, supaya harga dari database tidak tertimpa
+    private boolean memuatBaris;   // true saat form diisi dari baris tabel.
 
     public KamarPanel() {
         setLayout(new BorderLayout());
@@ -40,6 +40,7 @@ public class KamarPanel extends JPanel implements Refreshable {
         Ui.baris(formIsi, 2, "Harga sewa", txtHarga);
         Ui.baris(formIsi, 3, "Biaya utility", txtUtility);
         Ui.baris(formIsi, 4, "Status", cmbStatus);
+
         // Harga dan utility mengikuti jenis kamar, jadi tidak diketik manual.
         for (JTextField t : new JTextField[]{txtHarga, txtUtility}) {
             t.setEditable(false);
@@ -106,7 +107,8 @@ public class KamarPanel extends JPanel implements Refreshable {
         txtCari.addActionListener(e -> muatData(txtCari.getText().trim()));
         btnRefresh.addActionListener(e -> { txtCari.setText(""); muatData(""); });
         btnBersih.addActionListener(e -> bersihkan());
-        // Foto ikut berganti begitu jenis kamar diganti di form (sebelum disimpan).
+
+        // Foto ikut berganti begitu jenis kamar diganti di form.
         cmbTipe.addActionListener(e -> {
             foto.setTipe((String) cmbTipe.getSelectedItem());
             if (!memuatBaris) isiHargaStandar();
@@ -134,7 +136,7 @@ public class KamarPanel extends JPanel implements Refreshable {
 
     @Override public void refresh() { muatData(txtCari.getText().trim()); }
 
-    /** Menampilkan total bulanan hanya bila form berisi angka yang valid; selain itu mengosongkan label. */
+    // Menampilkan total bulanan hanya kalau form berisi angka yang valid.
     private void tampilTotal() {
         try {
             Kamar k = kamarContoh((String) cmbTipe.getSelectedItem());
@@ -208,7 +210,7 @@ public class KamarPanel extends JPanel implements Refreshable {
         }
     }
 
-    /** Mengisi harga sewa dan utility sesuai standar jenis kamar yang dipilih. */
+    // Mengisi harga sewa dan utility sesuai standar jenis kamar yang dipilih. 
     private void isiHargaStandar() {
         Kamar contoh = kamarContoh((String) cmbTipe.getSelectedItem());
         txtHarga.setText(Format.angka(contoh.getHargaStandar()));

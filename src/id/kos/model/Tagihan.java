@@ -36,7 +36,7 @@ public class Tagihan {
     public boolean isLunas() { return hitungSisa().signum() <= 0; }
     public boolean isMenunggak(LocalDate hariIni) { return !isLunas() && hariIni.isAfter(jatuhTempo); }
 
-    /** Jumlah hari keterlambatan terhitung dari jatuh tempo; 0 bila belum lewat atau sudah lunas. */
+    // Jumlah hari keterlambatan terhitung dari jatuh tempo 
     public long hariTerlambat(LocalDate hariIni) {
         return isMenunggak(hariIni) ? ChronoUnit.DAYS.between(jatuhTempo, hariIni) : 0;
     }

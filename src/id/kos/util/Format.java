@@ -9,10 +9,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
-/**
- * Format angka, rupiah, dan tanggal. Pemisah ribuan (titik) dan desimal (koma) ditentukan di sini,
- * tidak mengambil dari locale JDK, supaya hasilnya sama di semua komputer dan versi Java.
- */
+// Format angka, rupiah, dan tanggal, Pemisah ribuan dan desimal ditentukan di sini,
+ 
 public class Format {
     private static final DateTimeFormatter FORMAT_TANGGAL = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 

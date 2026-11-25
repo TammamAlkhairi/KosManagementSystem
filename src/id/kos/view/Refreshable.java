@@ -1,6 +1,6 @@
 package id.kos.view;
 
-/** Panel yang memuat ulang datanya setiap kali ditampilkan dari menu samping. */
+// INTERFACE
 public interface Refreshable {
     void refresh();
 }

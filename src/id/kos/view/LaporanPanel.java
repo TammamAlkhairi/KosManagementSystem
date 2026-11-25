@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Layar Laporan Tunggakan: filter tanggal acuan + kamar, tabel tunggakan, total tunggakan,
- * serta tombol Cetak (bisa "Simpan sebagai PDF" lewat dialog cetak) dan Ekspor CSV (dibuka di Excel).
+  Laporan Tunggakan: filter tanggal acuan + kamar, tabel tunggakan, total tunggakan,
+  serta tombol Cetak, bisa Simpan sebagai PDF, lewat dialog cetak dan Ekspor CSV dibuka di Excel.
  */
 public class LaporanPanel extends JPanel implements Refreshable {
     private static final String SEMUA_KAMAR = "Semua kamar";
@@ -121,7 +121,7 @@ public class LaporanPanel extends JPanel implements Refreshable {
         muatLaporan();
     }
 
-    /** Mengisi pilihan kamar (dengan mempertahankan pilihan sebelumnya bila masih ada). */
+    // Mengisi pilihan kamar.
     private void isiPilihanKamar() {
         Object lama = cmbKamar.getSelectedItem();
         int idLama = lama instanceof Kamar ? ((Kamar) lama).getIdKamar() : -1;
@@ -174,7 +174,7 @@ public class LaporanPanel extends JPanel implements Refreshable {
         return total;
     }
 
-    /** Membuka dialog cetak; pilih printer "Save as PDF"/"Microsoft Print to PDF" untuk menyimpan PDF. */
+    // Mencetak ke PDF.
     private void cetak() {
         if (data.isEmpty()) { Ui.info(this, "Tidak ada tunggakan untuk dicetak."); return; }
         try {
@@ -187,7 +187,7 @@ public class LaporanPanel extends JPanel implements Refreshable {
         }
     }
 
-    /** Ekspor ke CSV (UTF-8 + pemisah titik koma) agar langsung rapi saat dibuka di Excel versi Indonesia. */
+    // Ekspor ke CSV.
     private void ekspor() {
         if (data.isEmpty()) { Ui.info(this, "Tidak ada tunggakan untuk diekspor."); return; }
         JFileChooser fc = new JFileChooser();

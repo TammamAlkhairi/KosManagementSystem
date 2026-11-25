@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Layar Transaksi Sewa: memilih kamar KOSONG (dengan foto) dan penghuni, lalu memulai / mengakhiri sewa. */
+// Transaksi Sewa: memilih kamar KOSONG dan penghuni, lalu memulai / mengakhiri sewa.
 public class SewaPanel extends JPanel implements Refreshable {
     private final JComboBox<Kamar> cmbKamar = new JComboBox<>();
     private final JComboBox<Penghuni> cmbPenghuni = new JComboBox<>();
@@ -135,7 +135,7 @@ public class SewaPanel extends JPanel implements Refreshable {
         muatTabel();
     }
 
-    /** Memperbarui foto + estimasi biaya (per bulan atau per hari sesuai jenis periode). */
+    // Memperbarui foto + estimasi biaya per bulan atau per hari sesuai jenis periode.
     private void perbaruiEstimasi() {
         if (memuat) return;
         Kamar k = (Kamar) cmbKamar.getSelectedItem();

@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/** Jendela utama: menu samping dan area konten. */
+// Jendela utama, menu samping dan area konten.
 public class MainFrame extends JFrame {
     public static final String DASHBOARD = "dashboard";
     public static final String KAMAR = "kamar";
@@ -21,7 +21,7 @@ public class MainFrame extends JFrame {
     private final Map<String, Refreshable> layar = new LinkedHashMap<>();
     private final Map<String, MenuButton> menu = new LinkedHashMap<>();
 
-    /** Memasang tema tampilan. Panggil sebelum membuat jendela apa pun. */
+    // Memasang tema tampilan. Panggil sebelum membuat jendela apa pun, agar ditearpkan semua
     public static void pasangTema() { Ui.pasangTema(); }
 
     public MainFrame() {
@@ -45,8 +45,8 @@ public class MainFrame extends JFrame {
         samping.setBackground(Ui.SIDEBAR);
         samping.setPreferredSize(new Dimension(210, 0));
         samping.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 0, 1, Ui.GARIS),
-                BorderFactory.createEmptyBorder(20, 10, 14, 10)));
+             BorderFactory.createMatteBorder(0, 0, 0, 1, Ui.GARIS),
+             BorderFactory.createEmptyBorder(20, 10, 14, 10)));
 
         JPanel kepala = new JPanel();
         kepala.setOpaque(false);
@@ -82,7 +82,7 @@ public class MainFrame extends JFrame {
         menu.put(kunci, b);
     }
 
-    /** Menampilkan layar, menandai menu aktif, dan memuat ulang datanya. */
+    // Menampilkan layar, menandai menu aktif, dan memuat ulang datanya.
     public void tampilkan(String kunci) {
         if (!layar.containsKey(kunci)) return;
         cards.show(konten, kunci);
@@ -90,7 +90,7 @@ public class MainFrame extends JFrame {
         layar.get(kunci).refresh();
     }
 
-    /** Tombol menu samping: latar sorot untuk menu aktif dan saat disorot kursor. */
+    // Tombol menu samping, latar sorot buat menu yang aktif dan saat disorot kursor. 
     private static final class MenuButton extends JButton {
         private boolean aktif, hover;
 

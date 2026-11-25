@@ -35,7 +35,7 @@ public class KamarDAO {
         return hasil;
     }
 
-    // Dipakai pembuatan tagihan: total bulanan dihitung lewat polymorphism.
+    // Pembuatan tagihan: total bulanan dihitung lewat polymorphism.
     public Kamar getById(int id) throws SQLException {
         String sql = "SELECT * FROM kamar WHERE id_kamar = ?";
         try (Connection c = KoneksiDatabase.getConnection();
@@ -76,6 +76,8 @@ public class KamarDAO {
     }
 
     private Kamar buatObjek(ResultSet rs) throws SQLException {
+        // FACTORY/POLYMORPHISM:
+        // Data dari database dibentuk menjadi objek turunan sesuai nilai kolom tipe.
         int id = rs.getInt("id_kamar");
         String nomor = rs.getString("nomor_kamar");
         String tipe = rs.getString("tipe");

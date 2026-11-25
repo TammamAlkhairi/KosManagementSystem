@@ -21,9 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Layar Tagihan dan Pembayaran: daftar tagihan, pencatatan pembayaran (termasuk cicilan), dan riwayat. */
+// Tagihan dan Pembayaran: daftar tagihan, pencatatan pembayaran (termasuk cicilan), dan riwayat.
 public class TagihanPanel extends JPanel implements Refreshable {
-    /** Tanggal jatuh tempo default setiap bulan (nilai simulasi; dapat diubah sesuai aturan kos). */
+    // Tanggal jatuh tempo default setiap bulan. 
     private static final int TANGGAL_JATUH_TEMPO = 5;
 
     private final DefaultTableModel modelTagihan = Ui.modelTabel(
@@ -161,11 +161,8 @@ public class TagihanPanel extends JPanel implements Refreshable {
         }
     }
 
-    /**
-     * Membuat tagihan untuk sewa AKTIF yang dipilih.
-     * BULANAN: tagihan bulan berjalan = Kamar.hitungTotalBulanan().
-     * HARIAN : jumlah hari x Kamar.hitungTarifHarian(), jatuh tempo pada hari mulai sewa (bayar di muka).
-     */
+    // Membuat tagihan untuk sewa perbulan atau harian yang statusnya aktif.
+     
     private void buatTagihan() {
         try {
             List<Sewa> aktif = sewaDao.getAktif();

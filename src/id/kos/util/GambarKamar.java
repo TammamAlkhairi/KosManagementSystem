@@ -12,13 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
 
-/**
- * Memuat foto tipe kamar. Folder images dicari berurutan di:
- *  1. classpath (/images/...), bila foto ikut dikemas ke JAR
- *  2. folder kerja saat aplikasi dijalankan
- *  3. folder tempat class/JAR berada, naik sampai 4 tingkat (mis. out/ atau build/ di dalam root project)
- * Dengan begitu foto tetap ketemu walau IDE menjalankan aplikasi dari folder lain.
- */
+/* 
+  Memuat foto tipe kamar. Folder images dicari berurutan
+   1. classpath kalau foto ikut dikemas ke JAR
+   2. folder kerja saat aplikasi dijalankan
+   3. folder tempat class/JAR berada
+  foto tetap ketemu walau IDE menjalankan aplikasi dari folder lain. */
+ 
 public final class GambarKamar {
     private static final String FOLDER = "images";
     private static final Map<String, BufferedImage> ASLI = new HashMap<>();
@@ -32,7 +32,7 @@ public final class GambarKamar {
         return kamar == null ? null : muat(kamar.getNamaGambar());
     }
 
-    /** Foto yang sudah diperkecil halus ke ukuran tertentu (hasilnya di-cache). */
+    // Foto yang sudah diperkecil disimpan di cache.
     public static BufferedImage untuk(Kamar kamar, int lebar, int tinggi) {
         BufferedImage asli = untuk(kamar);
         if (asli == null || lebar <= 0 || tinggi <= 0) return null;
@@ -51,7 +51,7 @@ public final class GambarKamar {
         }
     }
 
-    /** Diperkecil bertahap (maksimal setengah per langkah) supaya tidak bergerigi. */
+    // Diperkecil bertahap supaya gambar bagus.
     private static BufferedImage perkecil(BufferedImage src, int w, int h) {
         BufferedImage cur = src;
         int cw = src.getWidth(), ch = src.getHeight();
@@ -80,7 +80,7 @@ public final class GambarKamar {
             for (File dasar : lokasiKode()) {
                 for (File f = dasar; f != null; f = f.getParentFile()) {
                     img = dariFile(new File(new File(f, FOLDER), namaBerkas));
-                    // VS Code sering membuka folder induk project: cek juga satu tingkat subfolder
+                    
                     File[] anak = img == null ? f.listFiles(File::isDirectory) : null;
                     if (anak != null) {
                         for (File a : anak) {

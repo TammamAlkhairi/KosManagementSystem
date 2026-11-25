@@ -9,10 +9,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 import javax.swing.*;
 
-/**
- * Foto tipe kamar (AC / Non-AC / Ensuite), dipotong mengisi bingkai. Bila fasilitas ditampilkan,
- * nama tipe dan daftar fasilitas ditulis di bawah foto, bukan di atasnya.
- */
+// menampilkan foto kamar, AC , Non-AC, ENSUITE, otomatis disesuaikan .
 class FotoKamarPanel extends JPanel {
     private static final int TINGGI_KETERANGAN = 46;
 
@@ -29,7 +26,7 @@ class FotoKamarPanel extends JPanel {
 
     void setKamar(Kamar k) { this.kamar = k; repaint(); }
 
-    /** Pratinjau berdasarkan tipe saja (mis. saat memilih jenis kamar di form sebelum disimpan). */
+    // Pratinjau berdasarkan tipe kamar sebelum di simpan.
     void setTipe(String tipe) {
         BigDecimal nol = BigDecimal.ZERO;
         if ("AC".equals(tipe)) kamar = new KamarAC(0, "", nol, nol, "");
@@ -42,7 +39,8 @@ class FotoKamarPanel extends JPanel {
     @Override protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        // Teks digambar dengan pengaturan yang sama seperti komponen Swing lain (pengaturan desktop sistem),
+
+        // mengatur kualitas tampilan huruf.
         // ditambah fractional metrics supaya jarak antarhuruf tidak dibulatkan ke piksel penuh dan terlihat renggang.
         Map<?, ?> hintDesktop = (Map<?, ?>) Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
         if (hintDesktop != null) g2.addRenderingHints(hintDesktop);
@@ -50,7 +48,8 @@ class FotoKamarPanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         int w = getWidth(), h = getHeight();
         boolean denganKet = tampilFasilitas && kamar != null;
-        // Bila ada keterangan, foto dijaga rasio 16:9 (sisa tinggi dibiarkan kosong); tanpa keterangan foto mengisi bingkai.
+
+        // jika ada keterangan, foto dibuat rasio 16:9, kalau kosong foto tampil penuh.
         int hf = denganKet ? Math.min(h - TINGGI_KETERANGAN, Math.round(w * 9f / 16f)) : h;
         if (hf < 1) hf = 1;
 

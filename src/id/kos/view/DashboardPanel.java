@@ -16,12 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-/**
- * Dashboard: angka ringkas (hunian, kamar kosong, tunggakan, sisa tagihan), foto tiap tipe kamar,
- * status kamar, dan tagihan yang perlu ditagih.
- */
+// dasboard , menampilkan jumlah hunian, kamar kosong, tunggakan, sisa tagihan
 public class DashboardPanel extends JPanel implements Refreshable {
-    /** Tagihan yang jatuh tempo dalam sekian hari ke depan ikut muncul di daftar penagihan. */
     private static final int HARI_PENGINGAT = 7;
 
     private final JLabel[] nilai = {new JLabel("0"), new JLabel("0"), new JLabel("0"), new JLabel("0")};
@@ -130,7 +126,7 @@ public class DashboardPanel extends JPanel implements Refreshable {
         return p;
     }
 
-    /** Satu tipe kamar: foto, jumlah kosong, dan harga termurah. */
+    // tampilan di dashboard untuk tiap tipe kamar (AC, NON_AC, ENSUITE)
     private static final class KartuTipe extends JPanel {
         private final String tipe;
         private final String namaTipe;

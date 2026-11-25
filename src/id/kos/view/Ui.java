@@ -11,10 +11,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
-/** Pembantu tampilan: warna, tema, tombol, tabel, dan dialog agar kode panel tidak berulang. */
+// Pembantu tampilan: warna, tema, tombol, tabel, dan dialog agar kode panel tidak berulang. 
 final class Ui {
-    // ---- palet warna: diambil dari foto referensi (greige, abu muda, taupe tua, pasir) ----
-    //   #938F84 greige   #D7CFCA abu muda   #7E7468 taupe tua   #D5C0AB pasir
+    
     static final Color SIDEBAR   = new Color(0xEBE7E3);
     static final Color SIDEBAR_HOVER = new Color(0xE0D9D3);
     static final Color AKSEN     = new Color(0x7E7468);
@@ -30,8 +29,7 @@ final class Ui {
     static final Color ZEBRA     = new Color(0xFBF9F7);
     static final Color PILIH     = new Color(0xE6D9CC);
     static final Color LATAR_KOLOM = new Color(0xEFEAE5);   // judul kolom tabel, kolom terkunci
-    static final Color LATAR_FOTO  = new Color(0xE9E4DF);   // pengganti foto yang belum ada
-
+    static final Color LATAR_FOTO  = new Color(0xE9E4DF);  
     static final String FONT = pilihFont();
 
     private Ui() { }
@@ -48,7 +46,7 @@ final class Ui {
 
     static Font font(int gaya, float ukuran) { return new Font(FONT, gaya, 1).deriveFont(ukuran); }
 
-    /** Dipanggil sekali dari Main sebelum jendela dibuat. Memakai tampilan bawaan sistem operasi. */
+    // Dipanggil sekali dari Main sebelum jendela dibuat. Memakai tampilan bawaan sistem operasi. 
     static void pasangTema() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -64,7 +62,7 @@ final class Ui {
         UIManager.put("Table.intercellSpacing", new Dimension(0, 0));
     }
 
-    // ---- dialog ----
+    // dialog 
     static void peringatan(Component parent, String pesan) {
         JOptionPane.showMessageDialog(parent, pesan, "Informasi", JOptionPane.WARNING_MESSAGE);
     }
@@ -78,8 +76,8 @@ final class Ui {
                 == JOptionPane.YES_OPTION;
     }
 
-    // ---- tata letak umum ----
-    /** Judul halaman + garis bawah tipis. */
+    // tata letak umum 
+    // Judul halaman + garis bawah tipis.
     static JComponent judul(String teks) { return judul(teks, null); }
 
     static JComponent judul(String teks, String subjudul) {
@@ -100,7 +98,7 @@ final class Ui {
         return p;
     }
 
-    /** Panel putih bersudut halus dengan judul bagian; isi diletakkan oleh pemanggil. */
+    // Panel putih bersudut halus.
     static JPanel kartu(String judulBagian) {
         JPanel p = new JPanel(new BorderLayout(0, 8)) {
             @Override protected void paintComponent(Graphics g) {
@@ -130,7 +128,7 @@ final class Ui {
         return p;
     }
 
-    /** Panel form dua kolom (label + input) berbasis GridBagLayout. */
+    // Panel form dua kolom label + input.
     static JPanel formPanel() {
         JPanel p = new JPanel(new GridBagLayout());
         p.setOpaque(false);
@@ -154,8 +152,8 @@ final class Ui {
         return BorderFactory.createLineBorder(GARIS);
     }
 
-    // ---- tombol ----
-    /** PRIMER = isi warna aksen. Gaya lain berupa tombol berbingkai; SUKSES dan BAHAYA hanya mewarnai teksnya. */
+    // tombol
+    // PRIMER, isi warna aksen. Gaya lain berupa tombol berbingkai.
     enum Gaya { PRIMER, SUKSES, BAHAYA, NETRAL }
 
     static JButton tombol(String teks, Gaya gaya) {
@@ -210,15 +208,15 @@ final class Ui {
         }
     }
 
-    // ---- tabel ----
-    /** Model tabel yang tidak dapat diedit langsung oleh pengguna. */
+    // tabel 
+    // Model tabel yang tidak dapat diedit.
     static DefaultTableModel modelTabel(String... kolom) {
         return new DefaultTableModel(kolom, 0) {
             @Override public boolean isCellEditable(int row, int column) { return false; }
         };
     }
 
-    /** Renderer dasar: baris belang (zebra) + teks berwarna sesuai nilai sel (opsional). */
+    // Renderer dasar: baris berwaarna + teks berwarna.
     static class SelRenderer extends DefaultTableCellRenderer {
         private final Map<String, Color> warnaTeks;
         private final int rata;
@@ -253,7 +251,7 @@ final class Ui {
         return new SelRenderer(null, SwingConstants.RIGHT, pemformat);
     }
 
-    /** Meratakan kolom (nomor kolom, mulai 0) ke kanan, termasuk judulnya, untuk nilai rupiah yang sudah berupa teks. */
+    // Meratakan kolom dan judulnya.
     static void kolomRupiah(JTable t, int... kolom) {
         for (int c : kolom) t.getColumnModel().getColumn(c).setCellRenderer(rendererAngka(o -> String.valueOf(o)));
     }
@@ -291,14 +289,14 @@ final class Ui {
         });
     }
 
-    /** Lebar relatif kolom (dipakai sebagai bobot; tabel tetap mengisi lebar panel). */
+    // Lebar relatif kolom.
     static void lebarKolom(JTable t, int... lebar) {
         for (int i = 0; i < lebar.length && i < t.getColumnCount(); i++) {
             t.getColumnModel().getColumn(i).setPreferredWidth(lebar[i]);
         }
     }
 
-    /** Membungkus tabel dalam JScrollPane yang bersih (tanpa bingkai ganda). */
+    // Membungkus tabel yang bersih.
     static JScrollPane gulir(JTable t) {
         gayaTabel(t);
         JScrollPane sp = new JScrollPane(t);
