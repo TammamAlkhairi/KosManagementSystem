@@ -23,9 +23,9 @@ final class Ui {
     static final Color GARIS     = new Color(0xD7CFCA);
     static final Color TEKS      = new Color(0x2F2B26);
     static final Color TEKS_REDUP = new Color(0x6F675C);
-    static final Color HIJAU     = new Color(0x5E7D5B);
+    static final Color HIJAU     = new Color(0x008000);
     static final Color ORANYE    = new Color(0xA06B2C);
-    static final Color MERAH     = new Color(0xA4473A);
+    static final Color MERAH     = new Color(0xCB4154);
     static final Color ZEBRA     = new Color(0xFBF9F7);
     static final Color PILIH     = new Color(0xE6D9CC);
     static final Color LATAR_KOLOM = new Color(0xEFEAE5); 
